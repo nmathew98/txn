@@ -1,0 +1,11 @@
+src/**
+*.spec.js
+*.spec.js.map
+coverage/**
+.eslintrc.cjs
+.gitignore
+.prettierignore
+.prettierrc.json
+.vscode
+.github
+.husky

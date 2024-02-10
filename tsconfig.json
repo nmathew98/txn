@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"module": "ESNext",
+		"target": "esnext",
+		"lib": ["ESNext", "DOM"],
+		"experimentalDecorators": true,
+		"esModuleInterop": true,
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"noUnusedLocals": true,
+		"noUncheckedIndexedAccess": true,
+		"allowSyntheticDefaultImports": true,
+		"removeComments": false,
+		"strict": true,
+		"useDefineForClassFields": true,
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"resolveJsonModule": true,
+		"outDir": "dist",
+		"declaration": true,
+		"skipLibCheck": true
+	},
+	"include": ["src"],
+	"exclude": ["dist"]
+}

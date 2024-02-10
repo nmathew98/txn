@@ -1,0 +1,45 @@
+{
+	"name": "@b.s/txn",
+	"version": "0.0.1",
+	"exports": {
+		"import": "./dist/index.mjs",
+		"require": "./dist/index.js",
+		"types": "./dist/index.d.ts"
+	},
+	"description": "Simple distributed transactions",
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"keywords": [
+		"saga",
+		"distributed",
+		"transaction",
+		"container"
+	],
+	"scripts": {
+		"build": "tsup-node src/index.ts --dts --format esm,cjs",
+		"lint": "eslint --ext .ts --ignore-path .gitignore . --fix",
+		"format": "prettier .  --write",
+		"test": "vitest --passWithNoTests",
+		"test.watch": "vitest --passWithNoTests --watch",
+		"release": "rm -rf dist && rm -rf node_modules && pnpm install && pnpm build && git push --follow-tags && pnpm publish",
+		"prepare": "husky"
+	},
+	"author": "Naveen Mathew",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^20.11.17",
+		"@typescript-eslint/eslint-plugin": "^6.21.0",
+		"@typescript-eslint/parser": "^6.21.0",
+		"acorn": "^8.11.3",
+		"esbuild": "^0.20.0",
+		"eslint": "^8.56.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-prettier": "^5.1.3",
+		"husky": "^9.0.10",
+		"prettier": "^3.2.5",
+		"tsup": "^8.0.2",
+		"typescript": "^5.3.3",
+		"vitest": "^1.2.2"
+	}
+}

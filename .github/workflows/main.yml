@@ -28,5 +28,8 @@ jobs:
             - name: Install modules
               run: corepack pnpm install
 
-            - name: Builds
+            - name: Unit tests
               run: corepack pnpm test
+
+            - name: Builds
+              run: corepack pnpm build

@@ -39,7 +39,7 @@ export const createTransaction: CreateTransaction = (
 		const numberOfQueries = Object.keys(options).length;
 		const numberOfResults = [...executedQueries.keys()].length;
 
-		if (numberOfQueries != numberOfResults) return;
+		if (numberOfQueries !== numberOfResults) return;
 
 		await Promise.all(
 			[...executedQueries.entries()].map(([key, value]) => {

@@ -21,7 +21,7 @@ Transactions are committed at the end of the scope and rolled back if any query 
 Simply `createTransaction` with your queries and execute them within `resolve` via `exec`:
 
 ```typescript
-const transaction = createTransaction({
+await using transaction = createTransaction({
 	order: {
 		queryFn: orderService.createOrder,
 		onSuccess: onSuccessCreateOrder,

@@ -12,9 +12,7 @@ export const createTransaction: CreateTransaction = options => {
 	const executedQueries = new Map();
 
 	const resolve: Resolve<typeof createTransaction> = async f => {
-		const result = await f();
-
-		await dispose();
+		const result = await f().finally(dispose);
 
 		return result;
 	};
@@ -40,6 +38,8 @@ export const createTransaction: CreateTransaction = options => {
 
 		await options[key]?.onError(error);
 
+		executedQueries.clear();
+
 		throw error;
 	};
 
@@ -50,9 +50,9 @@ export const createTransaction: CreateTransaction = options => {
 		if (numberOfQueries !== numberOfResults) return;
 
 		await Promise.all(
-			[...executedQueries.entries()].map(([key, value]) => {
-				options[key]?.onSuccess(value);
-			}),
+			[...executedQueries.entries()].map(([key, value]) =>
+				options[key]?.onSuccess(value),
+			),
 		);
 
 		executedQueries.clear();

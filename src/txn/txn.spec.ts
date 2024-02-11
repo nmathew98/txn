@@ -48,7 +48,7 @@ describe("createTransaction", () => {
 	describe("exec", () => {
 		it("invokes `onError` for each executed query if any throws", async () => {
 			const HELLO_OPTIONS = {
-				queryFn: vitest.fn(),
+				queryFn: vitest.fn().mockImplementation((arg: string) => arg),
 				onSuccess: vitest.fn(),
 				onError: vitest.fn(),
 			};
@@ -70,13 +70,15 @@ describe("createTransaction", () => {
 
 			await transaction
 				.resolve(async () => {
-					await transaction.exec("hello");
-					await transaction.exec("world");
+					await transaction.exec("hello", "world");
+					await transaction.exec("world", "hello");
 				})
 				.catch(() => {});
 
 			expect(HELLO_OPTIONS.onError).toBeCalledTimes(1);
 			expect(WORLD_OPTIONS.onError).toBeCalledTimes(1);
+			expect(HELLO_OPTIONS.onError).toBeCalledWith("world");
+			expect(WORLD_OPTIONS.onError).toBeCalledWith("error!")
 		});
 	});
 

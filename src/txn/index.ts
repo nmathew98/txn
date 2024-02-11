@@ -27,10 +27,10 @@ export const createTransaction: CreateTransaction = (
 
 	const reject: TODO = async (key, error) => {
 		await Promise.all(
-			[...executedQueries.keys()].map(key => options[key]?.onError()),
+			[...executedQueries.entries()].map(([key, value]) => options[key]?.onError(value)),
 		);
 
-		await options[key]?.onError(key);
+		await options[key]?.onError(error);
 
 		throw error;
 	};

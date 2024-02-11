@@ -8,6 +8,7 @@ export interface Transaction extends AsyncDisposable, TODO {
 
 export interface CreateTransactionOptions {
 	[prefix: string]: {
+		queryFn: (...args: TODO) => Promise<TODO>;
 		onSuccess: (result: unknown) => Promise<void>;
 		onError: (error?: unknown) => Promise<void>;
 	};

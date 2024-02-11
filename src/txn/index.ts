@@ -4,6 +4,8 @@ import type {
 	CreateTransaction,
 } from "./types";
 
+(Symbol as any).asyncDispose ??= Symbol("Symbol.asyncDispose");
+
 export const createTransaction: CreateTransaction = (
 	options: CreateTransactionOptions,
 ) => {
@@ -11,33 +13,31 @@ export const createTransaction: CreateTransaction = (
 
 	const resolve: TODO = f => f();
 
-	const exec: TODO =
-		(key, f) =>
-		async (...args) => {
-			try {
-				const result = await f(args);
+	const exec: TODO = async (key, args) => {
+		try {
+			const result = await options[key]?.queryFn(args);
 
-				executedQueries.set(key, result);
+			executedQueries.set(key, result);
 
-				return result;
-			} catch (error) {
-				return await reject(key, error);
-			}
-		};
+			return result;
+		} catch (error) {
+			return await reject(key, error);
+		}
+	};
 
 	const reject: TODO = async (key, error) => {
 		await Promise.all(
-			Object.keys(executedQueries).map(key => options[key]?.onError()),
+			[...executedQueries.keys()].map(key => options[key]?.onError()),
 		);
 
-		await options[key]?.onError?.(key);
+		await options[key]?.onError(key);
 
 		throw error;
 	};
 
 	const dispose = async (): Promise<void> => {
 		const numberOfQueries = Object.keys(options).length;
-		const numberOfResults = Object.keys(executedQueries).length;
+		const numberOfResults = [...executedQueries.keys()].length;
 
 		if (numberOfQueries != numberOfResults) return;
 

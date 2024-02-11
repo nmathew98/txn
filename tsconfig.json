@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"module": "ESNext",
 		"target": "esnext",
-		"lib": ["ESNext", "DOM"],
+		"lib": ["ESNext", "DOM", "ESNext.Disposable"],
 		"experimentalDecorators": true,
 		"esModuleInterop": true,
 		"noImplicitAny": false,

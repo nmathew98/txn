@@ -1,14 +1,18 @@
-export type CreateTransaction = (
-	options: CreateTransactionOptions,
-) => Transaction<typeof options>;
+export type CreateTransaction = <T extends CreateTransactionOptions>(
+	options: T,
+) => Transaction<T>;
 
 export interface Transaction<T extends CreateTransactionOptions>
 	extends AsyncDisposable {
 	resolve: <T>(f: () => Promise<T>) => Promise<T>;
-	exec: (
-		key: keyof T,
-		...args: Parameters<T[keyof T]["queryFn"]>
-	) => ReturnType<T[keyof T]["queryFn"]>;
+	exec: <K extends keyof T>(
+		key: K,
+		...args: any[]
+	) => Promise<unknown>;
+	// exec: <K extends keyof T>(
+	// 	key: K,
+	// 	...args: Parameters<T[K]["queryFn"]>
+	// ) => ReturnType<T[K]["queryFn"]>;
 }
 
 export interface QueryOptions {
@@ -17,7 +21,7 @@ export interface QueryOptions {
 	onError: <T>(error?: T) => Promise<void>;
 }
 
-export type CreateTransactionOptions = Record<string, QueryOptions>;
+export type CreateTransactionOptions = Record<string | number | symbol, QueryOptions>;
 
 export type Resolve<T extends CreateTransaction> = Pick<
 	ReturnType<T>,

@@ -1,5 +1,5 @@
 import { describe, expect, it, vitest } from "vitest";
-import { CreateTransactionOptions } from "./types";
+import type { CreateTransactionOptions } from "./types";
 import { createTransaction } from ".";
 
 describe("createTransaction", () => {
@@ -17,7 +17,9 @@ describe("createTransaction", () => {
 
 			await using transaction = createTransaction(options);
 
-			const result = await transaction.resolve(() => "hello world!");
+			const result = await transaction.resolve(
+				async () => "hello world!",
+			);
 
 			expect(result).toEqual("hello world!");
 		});
@@ -78,7 +80,7 @@ describe("createTransaction", () => {
 			expect(HELLO_OPTIONS.onError).toBeCalledTimes(1);
 			expect(WORLD_OPTIONS.onError).toBeCalledTimes(1);
 			expect(HELLO_OPTIONS.onError).toBeCalledWith("world");
-			expect(WORLD_OPTIONS.onError).toBeCalledWith("error!")
+			expect(WORLD_OPTIONS.onError).toBeCalledWith("error!");
 		});
 	});
 

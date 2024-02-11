@@ -1,5 +1,4 @@
 import { describe, expect, it, vitest } from "vitest";
-import { CreateTransactionOptions } from "./types";
 import { createTransaction } from ".";
 
 describe("createTransaction", () => {
@@ -11,13 +10,13 @@ describe("createTransaction", () => {
 				onError: vitest.fn(),
 			};
 
-			const options: CreateTransactionOptions = {
+			await using transaction = createTransaction({
 				test: TEST_OPTIONS,
-			};
+			});
 
-			await using transaction = createTransaction(options);
-
-			const result = await transaction.resolve(() => "hello world!");
+			const result = await transaction.resolve(
+				async () => "hello world!",
+			);
 
 			expect(result).toEqual("hello world!");
 		});
@@ -30,11 +29,10 @@ describe("createTransaction", () => {
 				onSuccess: vitest.fn(),
 				onError: vitest.fn(),
 			};
-			const options: CreateTransactionOptions = {
-				test: TEST_OPTIONS,
-			};
 
-			await using transaction = createTransaction(options);
+			await using transaction = createTransaction({
+				test: TEST_OPTIONS,
+			});
 
 			const result = () =>
 				transaction.resolve(async () => {
@@ -61,12 +59,10 @@ describe("createTransaction", () => {
 				onError: vitest.fn(),
 			};
 
-			const options: CreateTransactionOptions = {
+			await using transaction = createTransaction({
 				hello: HELLO_OPTIONS,
 				world: WORLD_OPTIONS,
-			};
-
-			await using transaction = createTransaction(options);
+			});
 
 			await transaction
 				.resolve(async () => {
@@ -78,7 +74,7 @@ describe("createTransaction", () => {
 			expect(HELLO_OPTIONS.onError).toBeCalledTimes(1);
 			expect(WORLD_OPTIONS.onError).toBeCalledTimes(1);
 			expect(HELLO_OPTIONS.onError).toBeCalledWith("world");
-			expect(WORLD_OPTIONS.onError).toBeCalledWith("error!")
+			expect(WORLD_OPTIONS.onError).toBeCalledWith("error!");
 		});
 	});
 
@@ -97,13 +93,11 @@ describe("createTransaction", () => {
 			onError: vitest.fn(),
 		};
 
-		const options: CreateTransactionOptions = {
-			hello: HELLO_OPTIONS,
-			world: WORLD_OPTIONS,
-		};
-
 		{
-			await using transaction = createTransaction(options);
+			await using transaction = createTransaction({
+				hello: HELLO_OPTIONS,
+				world: WORLD_OPTIONS,
+			});
 
 			await transaction
 				.resolve(async () => {
@@ -132,13 +126,11 @@ describe("createTransaction", () => {
 			onError: vitest.fn(),
 		};
 
-		const options: CreateTransactionOptions = {
-			hello: HELLO_OPTIONS,
-			world: WORLD_OPTIONS,
-		};
-
 		{
-			await using transaction = createTransaction(options);
+			await using transaction = createTransaction({
+				hello: HELLO_OPTIONS,
+				world: WORLD_OPTIONS,
+			});
 
 			await transaction.resolve(async () => {
 				await transaction.exec("hello", "world");

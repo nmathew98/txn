@@ -1,21 +1,21 @@
 import type {
-	TODO,
-	CreateTransactionOptions,
 	CreateTransaction,
+	AsyncDisposableHandler,
+	ExecError,
+	Exec,
+	Resolve,
 } from "./types";
 
 (Symbol as any).asyncDispose ??= Symbol("Symbol.asyncDispose");
 
-export const createTransaction: CreateTransaction = (
-	options: CreateTransactionOptions,
-) => {
+export const createTransaction: CreateTransaction = options => {
 	const executedQueries = new Map();
 
-	const resolve: TODO = f => f();
+	const resolve: Resolve<typeof createTransaction> = f => f();
 
-	const exec: TODO = async (key, args) => {
+	const exec: Exec<typeof options> = async (key, ...args) => {
 		try {
-			const result = await options[key]?.queryFn(args);
+			const result = await options[key]?.queryFn(...args);
 
 			executedQueries.set(key, result);
 
@@ -25,9 +25,11 @@ export const createTransaction: CreateTransaction = (
 		}
 	};
 
-	const reject: TODO = async (key, error) => {
+	const reject: ExecError<typeof options> = async (key, error) => {
 		await Promise.all(
-			[...executedQueries.entries()].map(([key, value]) => options[key]?.onError(value)),
+			[...executedQueries.entries()].map(([key, value]) =>
+				options[key]?.onError(value),
+			),
 		);
 
 		await options[key]?.onError(error);
@@ -35,7 +37,7 @@ export const createTransaction: CreateTransaction = (
 		throw error;
 	};
 
-	const dispose = async (): Promise<void> => {
+	const dispose: AsyncDisposableHandler = async () => {
 		const numberOfQueries = Object.keys(options).length;
 		const numberOfResults = [...executedQueries.keys()].length;
 

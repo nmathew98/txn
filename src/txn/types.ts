@@ -12,10 +12,6 @@ export interface Transaction<T extends CreateTransactionOptions>
 		key: K,
 		...args: Parameters<F>
 	) => ReturnType<F>;
-	// exec: <K extends keyof T>(
-	// 	key: K,
-	// 	...args: Parameters<T[K]["queryFn"]>
-	// ) => ReturnType<T[K]["queryFn"]>;
 }
 
 export interface QueryOptions<

@@ -105,12 +105,14 @@ describe("createTransaction", () => {
 
 			await transaction
 				.resolve(async () => {
-					await transaction.exec("hello");
-					await transaction.exec("world");
+					await transaction.exec("hello", "world");
+					await transaction.exec("world", "hello");
 				})
 				.catch(() => {});
 		}
 
+		expect(HELLO_OPTIONS.queryFn).toBeCalledWith("world");
+		expect(WORLD_OPTIONS.queryFn).toBeCalledWith("hello");
 		expect(HELLO_OPTIONS.onSuccess).not.toBeCalled();
 		expect(WORLD_OPTIONS.onSuccess).not.toBeCalled();
 	});
@@ -137,11 +139,13 @@ describe("createTransaction", () => {
 			await using transaction = createTransaction(options);
 
 			await transaction.resolve(async () => {
-				await transaction.exec("hello");
-				await transaction.exec("world");
+				await transaction.exec("hello", "world");
+				await transaction.exec("world", "hello");
 			});
 		}
 
+		expect(HELLO_OPTIONS.queryFn).toBeCalledWith("world");
+		expect(WORLD_OPTIONS.queryFn).toBeCalledWith("hello");
 		expect(HELLO_OPTIONS.onSuccess).toBeCalledTimes(1);
 		expect(WORLD_OPTIONS.onSuccess).toBeCalledTimes(1);
 	});

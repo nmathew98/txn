@@ -6,7 +6,7 @@ Simple distributed transactions using a container.
 
 Originally intended to be used with two phase commits (for example: [Postgres documentation](https://www.postgresql.org/docs/current/two-phase.html#TWO-PHASE)).
 
-Requires support for [`AsyncDisposable`](https://github.com/tc39/proposal-explicit-resource-management).
+Requires optional support for [`AsyncDisposable`](https://github.com/tc39/proposal-explicit-resource-management).
 
 ## Features
 
@@ -21,7 +21,7 @@ Transactions are committed at the end of the scope and rolled back if any query 
 Simply `createTransaction` with your queries and execute them within `resolve` via `exec`:
 
 ```typescript
-await using transaction = createTransaction({
+const transaction = createTransaction({
 	order: {
 		queryFn: orderService.createOrder,
 		onSuccess: onSuccessCreateOrder,
@@ -44,6 +44,34 @@ const { order, payment } = await transaction.resolve(async () => {
 
 	return { order: newOrder, payment: paymentReceipt };
 });
+
+// With support for `AsyncDisposable`
+
+const checkout = async () => {
+	await using transaction = createTransaction({
+		order: {
+			queryFn: orderService.createOrder,
+			onSuccess: onSuccessCreateOrder,
+			onError: onErrorCreateOrder,
+		},
+		payment: {
+			queryFn: paymentService.createPayment,
+			onSuccess: onSuccessCreatePayment,
+			onError: onErrorCreatePayment,
+		},
+	});
+
+	const newOrder = await transaction.exec("order", {
+		user: "1234",
+		items: [],
+	});
+
+	const paymentReceipt = await transaction.exec("payment", { order });
+
+	return { order: newOrder, payment: paymentReceipt };
+};
+
+const { order, payment } = await checkout();
 ```
 
 More information in `src/txn/txn.spec.ts`.

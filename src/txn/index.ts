@@ -11,7 +11,13 @@ import type {
 export const createTransaction: CreateTransaction = options => {
 	const executedQueries = new Map();
 
-	const resolve: Resolve<typeof createTransaction> = f => f();
+	const resolve: Resolve<typeof createTransaction> = async f => {
+		const result = await f();
+
+		await dispose();
+
+		return result;
+	};
 
 	const exec: Exec<typeof options> = async (key, ...args) => {
 		try {
@@ -48,6 +54,8 @@ export const createTransaction: CreateTransaction = options => {
 				options[key]?.onSuccess(value);
 			}),
 		);
+
+		executedQueries.clear();
 	};
 
 	return {

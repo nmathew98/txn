@@ -13,5 +13,6 @@ module.exports = {
 		camelcase: [1, { properties: "never" }],
 		"no-console": 2,
 		"@typescript-eslint/no-explicit-any": 0,
+		eqeqeq: 2,
 	},
 };

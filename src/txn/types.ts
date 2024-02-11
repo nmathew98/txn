@@ -5,38 +5,48 @@ export type CreateTransaction = <T extends CreateTransactionOptions>(
 export interface Transaction<T extends CreateTransactionOptions>
 	extends AsyncDisposable {
 	resolve: <T>(f: () => Promise<T>) => Promise<T>;
-	exec: <K extends keyof T>(
+	exec: <
+		K extends keyof T,
+		F extends (...args: any[]) => any = T[K]["queryFn"],
+	>(
 		key: K,
-		...args: any[]
-	) => Promise<unknown>;
+		...args: Parameters<F>
+	) => ReturnType<F>;
 	// exec: <K extends keyof T>(
 	// 	key: K,
 	// 	...args: Parameters<T[K]["queryFn"]>
 	// ) => ReturnType<T[K]["queryFn"]>;
 }
 
-export interface QueryOptions {
-	queryFn: <T, U>(...args: T[]) => Promise<U>;
+export interface QueryOptions<
+	F extends (...args: any[]) => Promise<any> = (
+		...args: any[]
+	) => Promise<any>,
+> {
+	queryFn: F;
 	onSuccess: <T>(result: T) => Promise<void>;
 	onError: <T>(error?: T) => Promise<void>;
 }
 
-export type CreateTransactionOptions = Record<string | number | symbol, QueryOptions>;
+export type CreateTransactionOptions = Record<
+	string | number | symbol,
+	QueryOptions
+>;
 
 export type Resolve<T extends CreateTransaction> = Pick<
 	ReturnType<T>,
 	"resolve"
 >["resolve"];
 
-export type Exec<T extends CreateTransaction> = Pick<
-	ReturnType<T>,
-	"exec"
->["exec"];
+export type Exec<
+	T extends CreateTransactionOptions,
+	K extends keyof T = keyof T,
+> = (key: K, ...args: Parameters<T[K]["queryFn"]>) => any;
 
-export type ExecError<T extends CreateTransaction> = (
-	key: Parameters<Pick<ReturnType<T>, "exec">["exec"]>[0],
-	error?: unknown,
-) => Promise<void>;
+export type ExecError<
+	T extends CreateTransactionOptions,
+	K extends keyof T = keyof T,
+> = (key: K, error?: unknown) => Promise<void>;
 
 export type AsyncDisposableHandler = Pick<
 	AsyncDisposable,

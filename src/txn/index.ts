@@ -13,7 +13,7 @@ export const createTransaction: CreateTransaction = options => {
 
 	const resolve: Resolve<typeof createTransaction> = f => f();
 
-	const exec: Exec<typeof createTransaction> = async (key, ...args) => {
+	const exec: Exec<typeof options> = async (key, ...args) => {
 		try {
 			const result = await options[key]?.queryFn(...args);
 
@@ -25,7 +25,7 @@ export const createTransaction: CreateTransaction = options => {
 		}
 	};
 
-	const reject: ExecError<typeof createTransaction> = async (key, error) => {
+	const reject: ExecError<typeof options> = async (key, error) => {
 		await Promise.all(
 			[...executedQueries.entries()].map(([key, value]) =>
 				options[key]?.onError(value),

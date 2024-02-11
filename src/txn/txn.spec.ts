@@ -10,7 +10,6 @@ describe("createTransaction", () => {
 				onError: vitest.fn(),
 			};
 
-
 			await using transaction = createTransaction({
 				test: TEST_OPTIONS,
 			});

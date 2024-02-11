@@ -1,6 +1,6 @@
 {
 	"name": "@b.s/txn",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"exports": {
 		"import": "./dist/index.mjs",
 		"require": "./dist/index.js",
@@ -20,7 +20,7 @@
 		"build": "tsup-node src/index.ts --dts --format esm,cjs",
 		"lint": "eslint --ext .ts --ignore-path .gitignore . --fix",
 		"format": "prettier .  --write",
-		"test": "vitest --passWithNoTests",
+		"test": "vitest run --passWithNoTests",
 		"test.watch": "vitest --passWithNoTests --watch",
 		"release": "rm -rf dist && rm -rf node_modules && pnpm install && pnpm build && git push --follow-tags && pnpm publish",
 		"prepare": "husky"

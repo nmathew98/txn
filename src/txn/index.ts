@@ -30,13 +30,12 @@ export const createTransaction: CreateTransaction = options => {
 	};
 
 	const reject: ExecError<typeof options> = async (key, error) => {
-		await Promise.all(
-			[...executedQueries.entries()].map(([key, value]) =>
+		await Promise.allSettled([
+			...[...executedQueries.entries()].map(([key, value]) =>
 				options[key]?.onError(value),
 			),
-		);
-
-		await options[key]?.onError(error);
+			options[key]?.onError(error),
+		]);
 
 		executedQueries.clear();
 
@@ -45,11 +44,11 @@ export const createTransaction: CreateTransaction = options => {
 
 	const dispose: AsyncDisposableHandler = async () => {
 		const numberOfQueries = Object.keys(options).length;
-		const numberOfResults = [...executedQueries.keys()].length;
+		const numberOfResults = executedQueries.size;
 
 		if (numberOfQueries !== numberOfResults) return;
 
-		await Promise.all(
+		await Promise.allSettled(
 			[...executedQueries.entries()].map(([key, value]) =>
 				options[key]?.onSuccess(value),
 			),

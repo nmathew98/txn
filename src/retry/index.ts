@@ -11,12 +11,12 @@ export const makeRetry = <T extends (...args: any[]) => Promise<any>>({
 		...args: any[]
 	): Promise<Awaited<ReturnType<typeof retryFn>>> => {
 		try {
-			return await retryFn(...args);
+			return retryFn(...args);
 		} catch (error: any) {
 			if (count >= retryTimes) throw error;
 
 			await sleep(exponentialWaitFor(count, interval, multiplier));
-			return await retry(count + 1, ...args);
+			return retry(count + 1, ...args);
 		}
 	};
 

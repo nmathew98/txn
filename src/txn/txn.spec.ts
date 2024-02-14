@@ -180,10 +180,10 @@ describe("createTransaction", () => {
 
 			const WORLD_OPTIONS = {
 				queryFn: vitest.fn(),
-				onSuccess: vitest.fn(),
-				onError: vitest.fn().mockImplementation(() => {
+				onSuccess: vitest.fn().mockImplementation(() => {
 					throw new Error();
 				}),
+				onError: vitest.fn(),
 			};
 
 			const transaction = createTransaction({
@@ -196,7 +196,7 @@ describe("createTransaction", () => {
 					await transaction.exec("hello", "world");
 					await transaction.exec("world", "hello");
 				}),
-			).resolves.not.toThrowError();
+			).rejects.toThrowError();
 
 			expect(HELLO_OPTIONS.onSuccess).toBeCalledTimes(1);
 			expect(WORLD_OPTIONS.onSuccess).toBeCalledTimes(1);

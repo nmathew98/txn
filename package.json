@@ -1,6 +1,6 @@
 {
 	"name": "@b.s/txn",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"exports": {
 		"import": "./dist/index.mjs",
 		"require": "./dist/index.js",

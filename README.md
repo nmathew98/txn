@@ -15,7 +15,7 @@ Has optional support for [`AsyncDisposable`](https://github.com/tc39/proposal-ex
 
 ## Background
 
-The scenario: when a customer checks out their cart, we need to create an order via the order microservice and a payment via the payment microservice. A checkout should only be successful if both are successful, and if either one is unsuccessful, then the checkout should fail: the order should not be created and the customer should not be charged
+The scenario: when a customer checks out their cart, we need to create an order via the order microservice and a payment via the payment microservice. A checkout should only be successful if both are successful, and if either one is unsuccessful, then the checkout should fail: the order should not be created and the customer should not be charged.
 
 A request can fail for many reasons: either the request provides invalid input (in which case we would want to rollback all changes `onError`) or the network fails (in which case we would want to `makeRetry` the request, the solution to the extreme case of retries failing being throwing our hands in the air and handling things manually).
 

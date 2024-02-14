@@ -6,13 +6,14 @@ Simple distributed transactions using a container.
 
 Originally intended to be used with two phase commits (for example: [Postgres documentation](https://www.postgresql.org/docs/current/two-phase.html#TWO-PHASE)).
 
-Requires optional support for [`AsyncDisposable`](https://github.com/tc39/proposal-explicit-resource-management).
+Has optional support for [`AsyncDisposable`](https://github.com/tc39/proposal-explicit-resource-management).
 
 ## Features
 
 -   CJS + ESM ✅
 -   Lightweight ✅
 -   Simple and easy to use ✅
+-   Retry mechanism ✅
 
 ## Usage
 
@@ -72,6 +73,12 @@ const checkout = async () => {
 };
 
 const { order, payment } = await checkout();
+
+// And ability to retry a function with `makeRetry`
+// Exponential backoff
+const createPayment = makeRetry({
+	retryFn: paymentService.createPayment,
+});
 ```
 
 More information in `src/txn/txn.spec.ts`.

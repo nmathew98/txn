@@ -32,6 +32,12 @@ describe("txn", async () => {
 		it.todo("refunds fail if an order has not been paid for");
 	});
 
+	describe("retrieving an order", () => {
+		it.todo("fails if the items in an order are not valid");
+
+		it.todo("is successful if the items in an order are valid");
+	});
+
 	describe("retrieving paid order", () => {
 		it.todo("is successful if order is valid and has been paid");
 

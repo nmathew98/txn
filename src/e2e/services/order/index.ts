@@ -47,6 +47,6 @@ export const createOrderService = () => {
 
 	return {
 		getOrder,
-		postCart: postOrder,
+		postOrder,
 	};
 };

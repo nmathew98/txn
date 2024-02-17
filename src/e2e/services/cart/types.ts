@@ -3,7 +3,6 @@ export interface Cart {
 	user: number;
 	restaurant: string;
 	items: CartItem[];
-	location: [number, number];
 }
 
 export interface Item {

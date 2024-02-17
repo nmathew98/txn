@@ -58,8 +58,21 @@ export const createRestaurantService = () => {
 		return newItem.uuid;
 	};
 
+	const getItems = async (restaurant: number, throws?: boolean) => {
+		if (throws) {
+			throw new Error("AHHH!!!");
+		}
+
+		if (!database.has(restaurant)) {
+			throw new Error(`Invalid restaurant ${restaurant}`);
+		}
+
+		return database.get(restaurant);
+	};
+
 	return {
 		postRestaurant,
 		putItem,
+		getItems,
 	};
 };

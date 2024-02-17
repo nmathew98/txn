@@ -3,7 +3,7 @@ import type { Item } from "./types";
 export const createRestaurantService = () => {
 	const database = new Map();
 
-	const postRestaurant = async (throws?: boolean) => {
+	const postRestaurant = async (throws?: boolean): Promise<number> => {
 		if (throws) {
 			throw new Error("AHHH!!!");
 		}
@@ -17,9 +17,8 @@ export const createRestaurantService = () => {
 
 	const putItem = async (
 		item: Omit<Item, "uuid">,
-		extras: number[],
 		throws?: boolean,
-	) => {
+	): Promise<number> => {
 		if (throws) {
 			throw new Error("AHHH!!!");
 		}
@@ -29,17 +28,6 @@ export const createRestaurantService = () => {
 		}
 
 		const existingItems = database.get(item.restaurant);
-		const existingItemsMap = existingItems.reduce(
-			(acc, item) => ({
-				...acc,
-				[item.uuid]: true,
-			}),
-			Object.create(null),
-		);
-
-		if (extras.some(extra => !existingItemsMap.has(extra))) {
-			throw new Error(`Invalid extras`);
-		}
 
 		const ITEM_KEY = existingItems.length;
 
@@ -48,17 +36,17 @@ export const createRestaurantService = () => {
 			uuid: ITEM_KEY,
 		};
 
-		const ITEMS_EXTRAS_KEY = `extras.${newItem.uuid}`;
-
 		const updatedItems = [newItem, ...existingItems];
 
 		database.set(item.restaurant, updatedItems);
-		database.set(ITEMS_EXTRAS_KEY, extras);
 
 		return newItem.uuid;
 	};
 
-	const getItems = async (restaurant: number, throws?: boolean) => {
+	const getItems = async (
+		restaurant: number,
+		throws?: boolean,
+	): Promise<Item[]> => {
 		if (throws) {
 			throw new Error("AHHH!!!");
 		}

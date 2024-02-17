@@ -3,7 +3,10 @@ import type { Expense, Receipt } from "./types";
 export const createPaymentService = () => {
 	const database = new Map();
 
-	const putPayment = async (expense: Expense, throws?: boolean) => {
+	const putPayment = async (
+		expense: Expense,
+		throws?: boolean,
+	): Promise<void> => {
 		if (throws) {
 			throw new Error("AHHH!!!");
 		}
@@ -24,7 +27,10 @@ export const createPaymentService = () => {
 		database.set(RECEIPT_KEY, receipt);
 	};
 
-	const putRefund = async (order: number, throws?: boolean) => {
+	const putRefund = async (
+		order: number,
+		throws?: boolean,
+	): Promise<void> => {
 		if (throws) {
 			throw new Error("AHHH!!!");
 		}

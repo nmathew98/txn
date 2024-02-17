@@ -3,7 +3,7 @@ import type { Cart, Order } from "./types";
 export const createOrderService = () => {
 	const database = new Map();
 
-	const postOrder = async (cart: Cart, throws?: boolean) => {
+	const postOrder = async (cart: Cart, throws?: boolean): Promise<number> => {
 		if (throws) {
 			throw new Error("AHHH!!!");
 		}
@@ -24,7 +24,11 @@ export const createOrderService = () => {
 		return newOrder.uuid;
 	};
 
-	const getOrder = async (user: number, order: number, throws?: boolean) => {
+	const getOrder = async (
+		user: number,
+		order: number,
+		throws?: boolean,
+	): Promise<Order> => {
 		if (throws) {
 			throw new Error("AHHH!!!");
 		}

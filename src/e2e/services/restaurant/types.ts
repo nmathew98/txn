@@ -8,8 +8,3 @@ export interface Item {
 	uuid: number;
 	price: number;
 }
-
-export interface ItemExtras {
-	item: number;
-	forItem: number;
-}

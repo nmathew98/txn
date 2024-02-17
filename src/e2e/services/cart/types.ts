@@ -1,12 +1,9 @@
 export interface Cart {
+	uuid: number;
 	user: number;
 	restaurant: string;
 	items: CartItem[];
 	location: [number, number];
-}
-
-export interface SavedCart extends Cart {
-	uuid: number;
 }
 
 export interface Item {

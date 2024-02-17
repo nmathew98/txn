@@ -1,14 +1,14 @@
-import type { Cart, SavedCart } from "./types";
+import type { Cart } from "./types";
 
 export const createCartService = () => {
 	const database = new Map();
 
-	const postCart = async (cart: Cart, throws?: boolean) => {
+	const postCart = async (cart: Omit<Cart, "uuid">, throws?: boolean) => {
 		if (throws) {
 			throw new Error("AHHH!!!");
 		}
 
-		const savedCart: SavedCart = {
+		const savedCart: Cart = {
 			...cart,
 			uuid: database.size,
 		};

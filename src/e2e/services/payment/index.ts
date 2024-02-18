@@ -1,28 +1,12 @@
-import type { Expense, Receipt, User } from "./types";
+import type { Expense, Receipt } from "./types";
 
 export const createPaymentService = () => {
 	const database = new Map();
 
-	const postPaymentMethod = async (user: User, throws?: boolean) => {
-		if (throws) {
-			throw new Error("AHHH!!!");
-		}
-
-		const KEY = `payment_methods.${user.uuid}`;
-
-		const existingPaymentMethods = database.has(KEY)
-			? database.get(KEY)
-			: [];
-
-		const updatedPaymentMethods = [
-			user.paymentMethod,
-			...existingPaymentMethods,
-		];
-
-		database.set(KEY, updatedPaymentMethods);
-	};
-
-	const putPayment = async (expense: Expense, throws?: boolean) => {
+	const putPayment = async (
+		expense: Expense,
+		throws?: boolean,
+	): Promise<void> => {
 		if (throws) {
 			throw new Error("AHHH!!!");
 		}
@@ -43,7 +27,10 @@ export const createPaymentService = () => {
 		database.set(RECEIPT_KEY, receipt);
 	};
 
-	const putRefund = async (order: number, throws?: boolean) => {
+	const putRefund = async (
+		order: number,
+		throws?: boolean,
+	): Promise<void> => {
 		if (throws) {
 			throw new Error("AHHH!!!");
 		}
@@ -69,7 +56,6 @@ export const createPaymentService = () => {
 	};
 
 	return {
-		postPaymentMethod,
 		putPayment,
 		putRefund,
 	};

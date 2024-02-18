@@ -3,7 +3,7 @@ import type { Cart, Order } from "./types";
 export const createOrderService = () => {
 	const database = new Map();
 
-	const postOrder = async (cart: Cart, throws?: boolean) => {
+	const postOrder = async (cart: Cart, throws?: boolean): Promise<number> => {
 		if (throws) {
 			throw new Error("AHHH!!!");
 		}
@@ -14,7 +14,7 @@ export const createOrderService = () => {
 
 		const newOrder: Order = {
 			...cart,
-			uuid: database.size,
+			uuid: database.size + 1,
 		};
 
 		const updatedOrders: Order[] = [newOrder, ...existingOrders];
@@ -24,7 +24,11 @@ export const createOrderService = () => {
 		return newOrder.uuid;
 	};
 
-	const getOrder = async (user: number, order: number, throws?: boolean) => {
+	const getOrder = async (
+		user: number,
+		order: number,
+		throws?: boolean,
+	): Promise<Order> => {
 		if (throws) {
 			throw new Error("AHHH!!!");
 		}
@@ -45,8 +49,31 @@ export const createOrderService = () => {
 		return savedOrder;
 	};
 
+	const deleteOrder = async (
+		user: number,
+		order: number,
+		throws?: boolean,
+	) => {
+		if (throws) {
+			throw new Error("AHHH!!!");
+		}
+
+		if (!database.has(user)) {
+			throw new Error(`Invalid user ${user}`);
+		}
+
+		const existingOrders = database.get(user);
+
+		const updatedOrders: Order[] = existingOrders.filter(
+			existingOrder => existingOrder.uuid === order,
+		);
+
+		database.set(user, updatedOrders);
+	};
+
 	return {
 		getOrder,
-		postCart: postOrder,
+		postOrder,
+		deleteOrder,
 	};
 };

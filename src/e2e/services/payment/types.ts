@@ -1,8 +1,3 @@
-export interface User {
-	uuid: number;
-	paymentMethod: string[];
-}
-
 export interface Expense {
 	order: number;
 	user: number;

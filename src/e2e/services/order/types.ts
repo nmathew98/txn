@@ -1,8 +1,8 @@
 export interface Cart {
 	user: number;
-	restaurant: string;
-	items: CartItem[];
-	location: [number, number];
+	cart: number;
+	restaurant: number;
+	items: Item[];
 }
 
 export interface Order extends Cart {
@@ -12,8 +12,4 @@ export interface Order extends Cart {
 export interface Item {
 	uuid: number;
 	quantity: number;
-}
-
-export interface CartItem extends Item {
-	extras: Item[];
 }

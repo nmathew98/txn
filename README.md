@@ -28,6 +28,7 @@ The second case is a little trickier, what if we create an order but making a pa
 This package targets orchestration and allows for Saga's to be implemented easily on the client (say a React web app or a new endpoint utilizing a [BFF](https://microservices.io/patterns/apigateway.html)) without tying the implementation to the database. It allows for easy composition with libraries such as [React Query](https://tanstack.com/query/v3/) (`transaction.resolve` can be used as the `queryFn`) and provides both CJS and ESM exports to cater for use on the backend or frontend.
 
 There are a few ways to go about achieving distributed transactions using this package, such as:
+
 1. two phase commits such as with [Postgres](https://www.postgresql.org/docs/current/two-phase.html#TWO-PHASE): we `PREPARE TRANSACTION` using the `queryFn` and `COMMIT PREPARED` `onSuccess` or `ROLLBACK PREPARED` `onError`.
 
 2. optimistically create rows and have a flag field in the database and flip it `onSuccess`, undoing any operations on 3rd party services `onError`

@@ -32,9 +32,9 @@ export const createTransaction: CreateTransaction = options => {
 	const reject: ExecError<typeof options> = async (key, error) => {
 		await Promise.allSettled([
 			...[...executedQueries.entries()].map(([key, value]) =>
-				options[key]?.onError(value),
+				options[key]?.onError?.(value),
 			),
-			options[key]?.onError(error),
+			options[key]?.onError?.(error),
 		]);
 
 		executedQueries.clear();
@@ -50,7 +50,7 @@ export const createTransaction: CreateTransaction = options => {
 
 		await Promise.allSettled(
 			[...executedQueries.entries()].map(([key, value]) =>
-				options[key]?.onSuccess(value),
+				options[key]?.onSuccess?.(value),
 			),
 		);
 

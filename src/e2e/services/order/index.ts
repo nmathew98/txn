@@ -14,7 +14,7 @@ export const createOrderService = () => {
 
 		const newOrder: Order = {
 			...cart,
-			uuid: database.size,
+			uuid: database.size + 1,
 		};
 
 		const updatedOrders: Order[] = [newOrder, ...existingOrders];
@@ -49,8 +49,31 @@ export const createOrderService = () => {
 		return savedOrder;
 	};
 
+	const deleteOrder = async (
+		user: number,
+		order: number,
+		throws?: boolean,
+	) => {
+		if (throws) {
+			throw new Error("AHHH!!!");
+		}
+
+		if (!database.has(user)) {
+			throw new Error(`Invalid user ${user}`);
+		}
+
+		const existingOrders = database.get(user);
+
+		const updatedOrders: Order[] = existingOrders.filter(
+			existingOrder => existingOrder.uuid === order,
+		);
+
+		database.set(user, updatedOrders);
+	};
+
 	return {
 		getOrder,
 		postOrder,
+		deleteOrder,
 	};
 };

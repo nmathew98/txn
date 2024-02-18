@@ -4,7 +4,7 @@ import { createOrderService } from "./services/order";
 import { createCartService } from "./services/cart";
 import { createPaymentService } from "./services/payment";
 import { createTransaction } from "../txn";
-import { Cart } from "./services/cart/types";
+import type { Cart } from "./services/cart/types";
 
 describe("txn", () => {
 	const orderService = createOrderService();
@@ -123,31 +123,80 @@ describe("txn", () => {
 		});
 	});
 
-	describe("creating an order", () => {
-		it.todo("is successful if all items in the cart are valid");
+	describe("paying for an order", async () => {
+		const restaurant = await restaurantService.postRestaurant();
+		const items = await Promise.all(
+			new Array(2)
+				.fill(null)
+				.map((_, idx) => ({
+					restaurant,
+					price: idx,
+				}))
+				.map(item => restaurantService.putItem(item)),
+		);
+		it("if payments fail then the order is removed but the cart remains", async () => {
+			const onErrorPostOrder = vitest
+				.fn()
+				.mockImplementation(orderService.deleteOrder);
 
-		it.todo("fails if any item is invalid");
-	});
+			const createOrder = async (cart: Omit<Cart, "uuid">) => {
+				await using transaction = createTransaction({
+					getItems: {
+						queryFn: restaurantService.getItems,
+						// TODO: Optional `onSuccess` and `onError`
+						onSuccess: vitest.fn(),
+						onError: vitest.fn(),
+					},
+					postCart: {
+						queryFn: cartService.postCart,
+						onSuccess: vitest.fn(),
+						onError: vitest.fn(),
+					},
+					postOrder: {
+						queryFn: orderService.postOrder,
+						onSuccess: vitest.fn(),
+						// TODO: Update types so that it is either Error | result of `queryFn`
+						onError: onErrorPostOrder,
+					},
+					putPayment: {
+						queryFn: paymentService.putPayment,
+						onSuccess: vitest.fn(),
+						onError: vitest.fn(),
+					},
+				});
 
-	describe("paying for an order", () => {
-		it.todo("is successful if order is valid");
+				const newCart = await transaction.exec("postCart", cart);
 
-		it.todo("fails if order is invalid");
+				const newOrder = await transaction.exec("postOrder", {
+					cart: newCart,
+					...cart,
+				});
 
-		it.todo("refunds fail if an order has not been paid for");
-	});
+				await transaction.exec(
+					"putPayment",
+					{
+						order: newOrder,
+						user: 1,
+						amount: 1,
+					},
+					true,
+				);
 
-	describe("retrieving an order", () => {
-		it.todo("fails if the items in an order are not valid");
+				return { order: newOrder };
+			};
 
-		it.todo("is successful if the items in an order are valid");
-	});
+			const result = createOrder({
+				user: 1,
+				restaurant,
+				items: items.map((item, idx) => ({
+					uuid: item,
+					quantity: idx,
+				})),
+			});
 
-	describe("retrieving paid order", () => {
-		it.todo("is successful if order is valid and has been paid");
-
-		it.todo("fails if order is not valid");
-
-		it.todo("fails if order has not been paid for");
+			await expect(result).rejects.toThrowError();
+			expect(onErrorPostOrder).toBeCalledTimes(1);
+			expect(onErrorPostOrder).toBeCalledWith(1);
+		});
 	});
 });

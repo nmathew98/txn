@@ -101,7 +101,7 @@ const createPayment = makeRetry({
 });
 ```
 
-More information in `src/txn/txn.spec.ts`.
+More information in `src/txn/txn.spec.ts` and `src/e2e/txn.test.ts`.
 
 ## Contributions
 

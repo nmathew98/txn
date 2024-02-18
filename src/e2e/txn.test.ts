@@ -29,14 +29,9 @@ describe("txn", () => {
 				await using transaction = createTransaction({
 					getItems: {
 						queryFn: restaurantService.getItems,
-						// TODO: Optional `onSuccess` and `onError`
-						onSuccess: vitest.fn(),
-						onError: vitest.fn(),
 					},
 					postCart: {
 						queryFn: cartService.postCart,
-						onSuccess: vitest.fn(),
-						onError: vitest.fn(),
 					},
 				});
 
@@ -79,9 +74,6 @@ describe("txn", () => {
 				await using transaction = createTransaction({
 					getItems: {
 						queryFn: restaurantService.getItems,
-						// TODO: Optional `onSuccess` and `onError`
-						onSuccess: onSuccessGetItems,
-						onError: onErrorGetItems,
 					},
 					postCart: {
 						queryFn: cartService.postCart,
@@ -143,25 +135,16 @@ describe("txn", () => {
 				await using transaction = createTransaction({
 					getItems: {
 						queryFn: restaurantService.getItems,
-						// TODO: Optional `onSuccess` and `onError`
-						onSuccess: vitest.fn(),
-						onError: vitest.fn(),
 					},
 					postCart: {
 						queryFn: cartService.postCart,
-						onSuccess: vitest.fn(),
-						onError: vitest.fn(),
 					},
 					postOrder: {
 						queryFn: orderService.postOrder,
-						onSuccess: vitest.fn(),
-						// TODO: Update types so that it is either Error | result of `queryFn`
 						onError: onErrorPostOrder,
 					},
 					putPayment: {
 						queryFn: paymentService.putPayment,
-						onSuccess: vitest.fn(),
-						onError: vitest.fn(),
 					},
 				});
 

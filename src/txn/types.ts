@@ -20,8 +20,8 @@ export interface QueryOptions<
 	) => Promise<any>,
 > {
 	queryFn: F;
-	onSuccess: <T>(result: T) => Promise<void>;
-	onError: <T>(error?: T) => Promise<void>;
+	onSuccess?: (result: unknown) => Promise<void>;
+	onError?: (error: unknown) => Promise<void>;
 }
 
 export type CreateTransactionOptions = Record<

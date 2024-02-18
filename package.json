@@ -6,6 +6,10 @@
 		"require": "./dist/index.js",
 		"types": "./dist/index.d.ts"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/nmathew98/txn"
+	},
 	"description": "Simple distributed transactions",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",

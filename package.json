@@ -1,10 +1,14 @@
 {
 	"name": "@b.s/txn",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"exports": {
 		"import": "./dist/index.mjs",
 		"require": "./dist/index.js",
 		"types": "./dist/index.d.ts"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/nmathew98/txn"
 	},
 	"description": "Simple distributed transactions",
 	"main": "./dist/index.js",

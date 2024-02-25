@@ -106,3 +106,5 @@ More information in `src/txn/txn.spec.ts` and `src/e2e/txn.test.ts`.
 ## Contributions
 
 -   Contributions are welcome, just make a pull request
+
+**_"Once a day, I try but I can't find a single word"_**
